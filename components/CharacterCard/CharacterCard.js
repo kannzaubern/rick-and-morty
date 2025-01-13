@@ -1,5 +1,5 @@
 import { renderCards } from "../../utils.js";
-const cardContainer = document.querySelector(".card-container");
+const cardsContainer = document.querySelector(".card-container");
 
 export function createCharacterCard(character) {
   // create elements
@@ -45,7 +45,7 @@ export function createCharacterCard(character) {
     cardOccurenceTitle,
     cardOccurenceContent
   );
-  cardContainer.append(card);
+  cardsContainer.append(card);
 
   // Filling the card with data
   cardImage.setAttribute("src", character.image);
@@ -58,5 +58,5 @@ export function createCharacterCard(character) {
   cardOccurenceContent.innerText = character.episode.length;
 
   // render cards on the screen
-  renderCards(cardContainer);
+  renderCards(cardsContainer);
 }
