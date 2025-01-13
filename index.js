@@ -11,14 +11,14 @@ const nextButton = document.querySelector('[data-js="button-next"]');
 const pagination = document.querySelector('[data-js="pagination"]');
 const searchInput = document.querySelector(".search-bar__input");
 
-const url = "https://rickandmortyapi.com/api/character";
+let url = "https://rickandmortyapi.com/api/character";
 
 // States
-const maxPage = 1;
-const page = 1;
-const searchQuery = "";
+let maxPage = 1;
+let page = 1;
+let searchQuery = "";
 
-fetchCharacters();
+fetchCharacters(url);
 
 // Creating and rendering cards
 // use this to clean the DOM .replaceChildren()
@@ -26,17 +26,51 @@ fetchCharacters();
 
 searchBar.addEventListener("submit", (e) => {
   e.preventDefault();
+  searchQuery = searchInput.value;
+
+  if (searchQuery) {
+    url += `/?name=${searchQuery}`;
+  }
+
+  cardContainer.replaceChildren();
   // render search
-  console.log(searchInput.value);
+  fetchCharacters(url);
   searchBar.reset();
 });
 
+nextButton.addEventListener("click", () => {
+  page += 1;
+  let paginationUrl = url + `?page=${page}`;
+  if (searchQuery != "") {
+    paginationUrl = url + `&page=${page}`;
+  }
+  cardContainer.replaceChildren();
+  fetchCharacters(paginationUrl);
+});
+
+prevButton.addEventListener("click", () => {
+  if (page == 1) {
+    return false;
+  }
+  page -= 1;
+  let paginationUrl = url + `?page=${page}`;
+  if (searchQuery != "") {
+    paginationUrl = url + `&page=${page}`;
+  }
+  cardContainer.replaceChildren();
+  fetchCharacters(paginationUrl);
+});
+
 // Fetch Characters from API
-async function fetchCharacters() {
-  const response = await fetch(url); // HTTP request
+async function fetchCharacters(apiUrl) {
+  const response = await fetch(apiUrl); // HTTP request
   const data = await response.json(); // Fetching and storing required data – the json method returns the data from that request
+  console.log(apiUrl);
+  // verify if data is existent
   if (data) {
     data.results.forEach((character) => {
+      maxPage = data.info.pages;
+      pagination.innerText = `${page} / ${maxPage}`;
       createCharacterCard(character);
     });
   }
