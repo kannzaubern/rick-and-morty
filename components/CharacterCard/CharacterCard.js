@@ -1,48 +1,42 @@
 import { renderCards } from "../../utils.js";
-
 const cardContainer = document.querySelector(".card-container");
 
 export function createCharacterCard(character) {
-  let card = document.createElement("li");
+  // create elements
+  const card = document.createElement("li");
+  const cardImageContainer = document.createElement("div");
+  const cardImage = document.createElement("img");
+  const cardImageGradient = document.createElement("div");
+  const cardContent = document.createElement("div");
+  const cardTitle = document.createElement("h2");
+  const cardInfo = document.createElement("dl");
+  const cardStatusTitle = document.createElement("dt");
+  const cardStatusContent = document.createElement("dd");
+  const cardTypeTitle = document.createElement("dt");
+  const cardTypeContent = document.createElement("dd");
+  const cardOccurenceTitle = document.createElement("dt");
+  const cardOccurenceContent = document.createElement("dd");
+
+  // add classes
   card.classList.add("card");
-  let cardImageContainer = document.createElement("div");
   cardImageContainer.classList.add("card__image-container");
-
-  card.append(cardImageContainer);
-
-  let cardImage = document.createElement("img");
   cardImage.classList.add("card__image");
-  let cardImageGradient = document.createElement("div");
   cardImageGradient.classList.add("card__image-gradient");
-
-  cardImageContainer.append(cardImage, cardImageGradient);
-  let cardContent = document.createElement("div");
   cardContent.classList.add("card__content");
-
-  card.append(cardContent);
-
-  let cardTitle = document.createElement("h2");
   cardTitle.classList.add("card__title");
-  let cardInfo = document.createElement("dl");
-  cardInfo.classList.add("card__info");
-
-  cardContent.append(cardTitle, cardInfo);
-
-  let cardStatusTitle = document.createElement("dt");
   cardStatusTitle.classList.add("card__info-title");
-  let cardStatusContent = document.createElement("dd");
-  cardStatusContent.classList.add("card__info-description");
-
-  let cardTypeTitle = document.createElement("dt");
   cardTypeTitle.classList.add("card__info-title");
-  let cardTypeContent = document.createElement("dd");
+  cardStatusContent.classList.add("card__info-description");
   cardTypeContent.classList.add("card__info-description");
-
-  let cardOccurenceTitle = document.createElement("dt");
+  cardInfo.classList.add("card__info");
   cardOccurenceTitle.classList.add("card__info-title");
-  let cardOccurenceContent = document.createElement("dd");
   cardOccurenceContent.classList.add("card__info-description");
 
+  // append elements
+  cardImageContainer.append(cardImage, cardImageGradient);
+  card.append(cardImageContainer);
+  card.append(cardContent);
+  cardContent.append(cardTitle, cardInfo);
   cardInfo.append(
     cardStatusTitle,
     cardStatusContent,
@@ -51,7 +45,6 @@ export function createCharacterCard(character) {
     cardOccurenceTitle,
     cardOccurenceContent
   );
-
   cardContainer.append(card);
 
   // Filling the card with data
@@ -62,8 +55,8 @@ export function createCharacterCard(character) {
   cardTypeTitle.innerText = "Type";
   cardTypeContent.innerText = character.type;
   cardOccurenceTitle.innerText = "Occurence";
-
   cardOccurenceContent.innerText = character.episode.length;
 
+  // render cards on the screen
   renderCards(cardContainer);
 }
