@@ -14,12 +14,10 @@ let maxPage = 1;
 let page = 1;
 let searchQuery = "";
 
+// Initial Create and render cards
 fetchCharacters(url);
 
-// Creating and rendering cards
-// use this to clean the DOM .replaceChildren()
-//// handle search and pagination event listeners
-
+// Handle search
 searchBar.addEventListener("submit", (e) => {
   e.preventDefault();
   searchQuery = searchInput.value;
@@ -30,29 +28,31 @@ searchBar.addEventListener("submit", (e) => {
 
   cardContainer.replaceChildren();
   // Render search results
-  pagination.innerText = `${page} / ${maxPage}`;
   fetchCharacters(searchUrl);
+  pagination.innerText = `${page} / ${maxPage}`;
   searchBar.reset();
 });
 
+// Handle next page
 nextButton.addEventListener("click", () => {
   if (page == maxPage) {
     return false;
   }
   page += 1;
-  let paginationUrl = url + `?page=${page}`; // Assuming search query is empty; we don't just want the base URL, we want to filter
+  let paginationUrl = url + `?page=${page}`;
   if (searchQuery != "") {
-    paginationUrl = url + `/?name=${searchQuery}` + `&page=${page}`; // Assuming it's not empty (i.e. user searched for Rick), we only add the page parameter on top
+    paginationUrl = url + `/?name=${searchQuery}` + `&page=${page}`;
   }
   console.log("Pagination URL:", paginationUrl);
   cardContainer.replaceChildren();
-  pagination.innerText = `${page} / ${maxPage}`;
   fetchCharacters(paginationUrl);
+  pagination.innerText = `${page} / ${maxPage}`;
 });
 
+// Handle prev page
 prevButton.addEventListener("click", () => {
   if (page == 1) {
-    return false; // Everything below in this function won't be considered
+    return false;
   }
   page -= 1;
   let paginationUrl = url + `?page=${page}`;
@@ -61,17 +61,16 @@ prevButton.addEventListener("click", () => {
   }
   console.log("Pagination URL:", paginationUrl);
   cardContainer.replaceChildren();
-  pagination.innerText = `${page} / ${maxPage}`;
   fetchCharacters(paginationUrl);
+  pagination.innerText = `${page} / ${maxPage}`;
 });
 
 // Fetch Characters from API
 async function fetchCharacters(apiUrl) {
-  const response = await fetch(apiUrl); // HTTP request
-  const data = await response.json(); // Fetching and storing required data – the json method returns the data from that request
+  const response = await fetch(apiUrl);
+  const data = await response.json();
 
-  // verify if data is existent
-  if (data) {
+  if (!data.error) {
     console.log("Data:", data);
     maxPage = data.info.pages;
     pagination.innerText = `${page} / ${maxPage}`;
@@ -79,5 +78,8 @@ async function fetchCharacters(apiUrl) {
     data.results.forEach((character) => {
       createCharacterCard(character);
     });
+  } else {
+    pagination.innerText = `1 / 1`;
+    return false;
   }
 }
